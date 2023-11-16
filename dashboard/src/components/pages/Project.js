@@ -10,7 +10,8 @@ function Project() {
 
     const {id} = useParams()
     const [project, setProject] = useState([])
-    const [showProjectForm, setShowProjectForm] = useState([])
+    const [showProjectForm, setShowProjectForm] = useState(false)
+    const [showServiceForm, setShowServiceForm] = useState(false)
     const [message, setMessage] = useState()
     const [type, setType] = useState()
 
@@ -60,6 +61,10 @@ function Project() {
         setShowProjectForm(!showProjectForm)
     }
 
+    function toggleServiceForm() {
+        setShowServiceForm(!showServiceForm)
+    }
+
     return (
         <>
             {project.name ? (
@@ -90,9 +95,25 @@ function Project() {
                                         btnText="Concluir edição"
                                         projectData={project}
                                     />
-
                                 </div>
                             )}
+                        </div>
+                        <div className={styles.serviceFormContainer}>
+                            <h2>Adicione um serviço:</h2>
+                            <button className={styles.btn} onClick={toggleServiceForm}>
+                                {!showServiceForm ? 'Adicionar serviço' : 'Fechar'}
+                            </button>
+                            <div className={styles.projectInfo}>
+                                {showServiceForm && (
+                                      <div>
+                                          formulário do serviço
+                                      </div>
+                                )}
+                            </div>
+                            <h2>Serviço</h2>
+                            <Container customClass="start">
+                                <p>Itens de serviços</p>
+                            </Container>
                         </div>
                     </Container>
                 </div>

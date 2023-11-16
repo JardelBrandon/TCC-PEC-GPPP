@@ -73,8 +73,27 @@
         "id": "1",
         "name": "Infra"
       },
-      "cost": 0,
-      "services": [],
+      "cost": 600,
+      "services": [
+        {
+          "name": "Meu novo serviço",
+          "cost": "100",
+          "description": "faz isso aqui",
+          "id": "b60ec8b8-9f36-47c1-9eed-94336467260e"
+        },
+        {
+          "name": "Meu novo serviço 1",
+          "cost": "200",
+          "description": "faz isso aqui",
+          "id": "09fc7a5b-76ec-4735-b4d7-7667eea762b7"
+        },
+        {
+          "name": "Meu novo serviço 2",
+          "cost": "300",
+          "description": "faz isso aqui",
+          "id": "734c98b2-681a-4b2f-8ac5-33856d3f6145"
+        }
+      ],
       "id": 8
     }
   ],

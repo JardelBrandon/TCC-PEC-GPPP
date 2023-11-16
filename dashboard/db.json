@@ -40,8 +40,15 @@
         "id": "3",
         "name": "Design"
       },
-      "cost": 0,
-      "services": [],
+      "cost": 100,
+      "services": [
+        {
+          "name": "Novo serviço",
+          "cost": "100",
+          "description": "Teste",
+          "id": "52c36b44-c4bb-488a-93ad-c40f933cca39"
+        }
+      ],
       "id": 5
     },
     {

@@ -7,8 +7,13 @@
         "id": "2",
         "name": "Desenvolvimento"
       },
-      "cost": 0,
-      "services": [],
+      "cost": null,
+      "services": [
+        {
+          "cost": "99",
+          "id": "94b64cda-8b3c-406e-b40b-d476417d00f1"
+        }
+      ],
       "id": 1
     },
     {
@@ -29,8 +34,17 @@
         "id": "3",
         "name": "Design"
       },
-      "cost": 0,
-      "services": [],
+      "cost": null,
+      "services": [
+        {
+          "cost": "100",
+          "id": "01f2c6a8-5693-42c8-9e87-589b844f28ba"
+        },
+        {
+          "description": "5000",
+          "id": "22b0515e-f575-4a5a-8466-f198cdf2bae8"
+        }
+      ],
       "id": 4
     },
     {

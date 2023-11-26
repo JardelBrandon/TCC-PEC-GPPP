@@ -4,7 +4,7 @@ import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 
 import Home from "./components/pages/Home";
-import Dashboard from "./components/pages/Dashboard";
+import Dashboard from "./components/pages/Dashboard.tsx";
 import Contact from "./components/pages/Contact";
 import NewProject from "./components/pages/NewProject";
 import Projects from "./components/pages/Projects";

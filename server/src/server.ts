@@ -1,22 +1,32 @@
 import http from "http";
-import {getDatabase} from "./services/notion";
+import {getActivities, getThingToLearn} from "./_services/notion";
 
 const host = "localhost";
-const port = 8000;
+const port = 5000;
 
 // Require an async function here to support await with the DB query
 const server = http.createServer(async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    function response(cod: number, list: string) {
+        console.dir(list, {depth: null});
+        res.setHeader("Content-Type", "application/json");
+        res.writeHead(cod);
+        res.end(list);
+    }
 
     switch (req.url) {
         case "/":
-            // Query the database and wait for the result
-            const list = await getDatabase();
+            const list = await getThingToLearn();
 
-            res.setHeader("Content-Type", "application/json");
-            res.writeHead(200);
-            res.end(JSON.stringify(list));
+
+            response(200, JSON.stringify(list));
+            break;
+
+        case "/projects":
+            const listActivities = await getActivities();
+
+            response(200, JSON.stringify(listActivities));
             break;
 
         default:

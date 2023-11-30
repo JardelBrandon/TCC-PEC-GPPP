@@ -19,7 +19,7 @@ function Dashboard() {
             <button
                 type="button"
                 onClick={() => {
-                    fetch("http://localhost:8000/")
+                    fetch("http://localhost:5000")
                         .then((response) => response.json())
                         .then((payload) => {
                             // Set the React state with the array response

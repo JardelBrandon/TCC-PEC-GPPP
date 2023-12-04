@@ -1,6 +1,11 @@
 const express = require('express');
+
+const objectivesController = require("../controllers/objectivesController");
+const objectivesMiddleware = require("../middlewares/objectivesMiddleware");
+
 const projectsController = require("../controllers/projectsController");
 const projectsMiddleware = require("../middlewares/projectsMiddleware");
+
 const tasksController = require("../controllers/tasksController");
 const tasksMiddleware = require("../middlewares/tasksMiddleware");
 
@@ -8,6 +13,13 @@ const router = express.Router();
 
 router.get('/', (req, res) =>
     res.status(200).send("Hello World!"));
+
+router.get('/objectives', objectivesController.getObjectives);
+router.get('/objective/:id', objectivesController.getObjective);
+router.get('/objectives/quarterly', objectivesController.getObjectivesQuarterly);
+router.post('/objective', objectivesMiddleware.validateBody, objectivesController.createObjective);
+router.delete('/objective/:id', objectivesController.deleteObjective);
+router.patch('/objective/:id', objectivesMiddleware.validateBody, objectivesController.updateObjective);
 
 router.get('/projects', projectsController.getProjects);
 router.get('/project/:id', projectsController.getProject);

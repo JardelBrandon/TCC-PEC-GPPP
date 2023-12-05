@@ -1,13 +1,46 @@
-const notion = require("../_services/connection")
+const notion = require("../services/connection")
+const {getObjective} = require("./objectivesModel");
+const {getTask} = require("./tasksModel");
 
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ACTIVITIES_ID
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ACTIVITIES_ID;
+
+async function adapterResponse(projects, idObjectives, idTasks) {
+
+    const objectives = await Promise.all(idObjectives.map((id) => {
+        return getObjective(id);
+    }));
+
+    const tasks = await Promise.all(idTasks.map((id) => {
+        return getTask(id);
+    }));
+
+    return projects.map((data) => ({
+        id: data.id,
+        name: data.properties.Name.title[0].plain_text,
+        budget: data.properties.Budget.number,
+        category: objectives.map((objective) => (objective.properties.Name.title[0].plain_text)),
+        costs: data.properties.Costs.rollup.number,
+        tasks: tasks
+    }))
+}
 
 const getProjects = async () => {
     const projects = await notion.databases.query({
         database_id: NOTION_DATABASE_ID,
     });
-    console.dir(projects, {depth: null});
-    return projects;
+
+    const typedResponse = await Promise.all(
+        projects.results.map(async project => {
+
+        const idObjectives = project.properties.Objectives.relation.map(id => id.id);
+        const idTasks = project.properties.Tasks.relation.map(id => id.id);
+
+        return await adapterResponse(projects.results, idObjectives, idTasks);
+        })
+    );
+
+    console.dir(await typedResponse, {depth: null});
+    return await typedResponse;
 };
 
 const getProjectsMonthly = async () => {
@@ -27,16 +60,35 @@ const getProjectsMonthly = async () => {
             }
         },
     });
-    console.dir(projectsMonthly, {depth: null})
-    return projectsMonthly;
+
+
+    const typedResponse = await Promise.all(
+        projectsMonthly.results.map(async project => {
+
+            const idObjectives = project.properties.Objectives.relation.map(id => id.id);
+            const idTasks = project.properties.Tasks.relation.map(id => id.id);
+
+            console.log("asdfasdf", idObjectives, idTasks, "qwerqwer", projectsMonthly.results.map(project => project.properties.Tasks.relation.map(id => id.id)), "\n\n\n\n\n");
+
+            return await adapterResponse(projectsMonthly.results, idObjectives, idTasks);
+        })
+    );
+
+    console.dir(typedResponse, {depth: null});
+    return typedResponse;
 };
 
 const getProject = async (id) => {
     const project = await notion.pages.retrieve({
         page_id: id
     })
-    console.log(project);
-    return project;
+    const idObjectives = project.properties.Objectives.relation.map(id => id.id);
+    const idTasks = project.properties.Tasks.relation.map(id => id.id);
+
+    const typedResponse = await adapterResponse([project], idObjectives, idTasks);
+
+    console.log(typedResponse);
+    return typedResponse;
 };
 
 const createProject = async (project) => {

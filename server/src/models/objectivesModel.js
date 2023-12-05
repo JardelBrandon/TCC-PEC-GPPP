@@ -1,4 +1,4 @@
-const notion = require("../_services/connection")
+const notion = require("../services/connection")
 
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_OBJECTIVES_ID
 

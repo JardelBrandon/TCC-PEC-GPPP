@@ -9,7 +9,7 @@ function ProjectForm({handleSubmit, btnText, projectData}) {
     const [project, setProject] = useState(projectData || {})
 
     useEffect(() => {
-        fetch("http://localhost:3333/categories", {
+        fetch("http://localhost:3333/objectives", {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -17,6 +17,7 @@ function ProjectForm({handleSubmit, btnText, projectData}) {
         })
             .then((resp) => resp.json())
             .then((data) => {
+                console.log(data)
                 setCategories(data)
             })
             .catch((err) => console.log(err))
@@ -24,12 +25,17 @@ function ProjectForm({handleSubmit, btnText, projectData}) {
 
     const submit = (e) => {
         e.preventDefault()
-        // console.log(project)
+        console.log(project)
         handleSubmit(project)
     }
 
-    function handleChange(e) {
+    function handleChangeName(e) {
         setProject({ ...project, [e.target.name]: e.target.value})
+        // console.log(project)
+    }
+    function handleChangeBudget(e) {
+        setProject({ ...project, [e.target.name]: Number(e.target.value)})
+        // console.log(project)
     }
     function handleCategory(e) {
         setProject({
@@ -48,8 +54,8 @@ function ProjectForm({handleSubmit, btnText, projectData}) {
                     text="Nome do projeto"
                     name="name"
                     placeholder="Insira o nome do projeto"
-                    handleOnChange={handleChange}
-                    value={project.name ? project.name: ''}
+                    handleOnChange={handleChangeName}
+                    value={project.name ? project.name : ''}
                 />
             </div>
             <Input
@@ -57,15 +63,15 @@ function ProjectForm({handleSubmit, btnText, projectData}) {
                 text="Orçamento do projeto"
                 name="budget"
                 placeholder="Insira o orçamento total"
-                handleOnChange={handleChange}
-                value={project.budget ? project.budget: ''}
+                handleOnChange={handleChangeBudget}
+                value={project.budget ? project.budget : ''}
             />
             <Select
                 name="categoryId"
                 text="Selecione a categoria"
                 options={categories}
                 handleOnChange={handleCategory}
-                value={project.category ? project.category.id: ''}
+                value={project.category ? project.category.id : ''}
             />
             <SubmitButton text={btnText}/>
         </form>

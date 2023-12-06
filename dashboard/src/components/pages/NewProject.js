@@ -7,9 +7,9 @@ function NewProject() {
     function createPost(project) {
         // Initialize cost and services
         project.cost = 0
-        project.services = []
+        project.tasks = []
 
-        fetch("http://localhost:3333/projects", {
+        fetch("http://localhost:3333/project", {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
@@ -29,7 +29,7 @@ function NewProject() {
     return(
         <div className={styles.newProjectContainer}>
             <h1>Criar Projeto</h1>
-            <p>Crie seu projeto para depois adicionar os serviços</p>
+            <p>Crie seu projeto para depois adicionar as tarefas</p>
             <ProjectForm handleSubmit={createPost} btnText="Criar Projeto"/>
         </div>
     )

@@ -2,12 +2,21 @@ const notion = require("../services/connection")
 
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_OBJECTIVES_ID
 
+async function adapterResponse(objectives) {
+    return objectives.map((data) => ({
+        id: data.id,
+        name: data.properties.Name.title[0].plain_text,
+    }));
+}
+
 const getObjectives = async () => {
     const objectives = await notion.databases.query({
         database_id: NOTION_DATABASE_ID,
     });
-    console.dir(objectives, {depth: null});
-    return objectives;
+
+    const typedResponse = adapterResponse(objectives.results);
+    console.dir(typedResponse, {depth: null});
+    return typedResponse;
 };
 
 const getObjectivesQuarterly = async () => {

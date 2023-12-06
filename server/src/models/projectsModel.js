@@ -18,7 +18,10 @@ async function adapterResponse(projects, idObjectives, idTasks) {
         id: data.id,
         name: data.properties.Name.title[0].plain_text,
         budget: data.properties.Budget.number,
-        category: objectives.map((objective) => (objective.properties.Name.title[0].plain_text)),
+        category: objectives.map((objective) => ({
+            "id": objective.id,
+            "name": objective.properties.Name.title[0].plain_text
+        })),
         costs: data.properties.Costs.rollup.number,
         tasks: tasks
     }))
@@ -68,8 +71,6 @@ const getProjectsMonthly = async () => {
             const idObjectives = project.properties.Objectives.relation.map(id => id.id);
             const idTasks = project.properties.Tasks.relation.map(id => id.id);
 
-            console.log("asdfasdf", idObjectives, idTasks, "qwerqwer", projectsMonthly.results.map(project => project.properties.Tasks.relation.map(id => id.id)), "\n\n\n\n\n");
-
             return await adapterResponse(projectsMonthly.results, idObjectives, idTasks);
         })
     );
@@ -92,7 +93,7 @@ const getProject = async (id) => {
 };
 
 const createProject = async (project) => {
-    const {title} = project;
+    const {name, budget, category} = project;
 
     const createdProject = await notion.pages.create({
         parent: {
@@ -103,10 +104,18 @@ const createProject = async (project) => {
                 "title": [
                     {
                         "text": {
-                            "content": title
+                            "content": name
                         }
                     }
                 ]
+            },
+            "Budget": {
+                "number": budget
+            },
+            "Objectives": {
+                "relation": [{
+                    "id": category.id
+                }]
             }
         }
     });

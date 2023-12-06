@@ -1,13 +1,8 @@
 const notion = require("../services/connection")
-const {getProject} = require("./projectsModel");
 
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_TASKS_ID
 
-async function adapterResponse(tasks, idActivities) {
-    // const activities = await Promise.all(idActivities.map(async (id) => {
-    //     return await getProject(id);
-    // }));
-
+async function adapterResponse(tasks) {
     return tasks.map((data) => ({
         id: data.id,
         name: data.properties.Name.title[0].plain_text,
@@ -25,8 +20,6 @@ const getTasks = async () => {
         tasks.results.map(async project => {
 
             const idActivities = project.properties.Activities.relation.map(id => id.id);
-
-            console.log("asdfasdf", idActivities, "qwerqwer", tasks.results.map(project => project.properties.Activities.relation.map(id => id.id)), "\n\n\n\n\n");
 
             return await adapterResponse(tasks.results, idActivities);
         })
@@ -52,8 +45,6 @@ const getTasksWeekly = async () => {
         tasksWeekly.results.map(async project => {
 
             const idActivities = project.properties.Activities.relation.map(id => id.id);
-
-            console.log("asdfasdf", idActivities, "qwerqwer", tasksWeekly.results.map(project => project.properties.Activities.relation.map(id => id.id)), "\n\n\n\n\n");
 
             return await adapterResponse(tasksWeekly.results, idActivities);
         })

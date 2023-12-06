@@ -2,7 +2,7 @@
     padding: 1em;
     border: 1px solid #7A7A7A;
     border-radius: 5px;
-    width: 24%;
+    display: inline-block;
     margin: 0.5%;
 }
 
@@ -37,22 +37,6 @@
     margin-right: 5px;
 }
 
-.categoryText .infra {
-    background-color: #FFAEBC;
-}
-
-.categoryText .desenvovimento {
-    background-color: #A0E7E5;
-}
-
-.categoryText .design {
-    background-color: #B4F8C8;
-}
-
-.categoryText .planejamento {
-    background-color: #FBE7C6;
-}
-
 .projectCardActions {
     margin-top: 1.2em;
     display: flex;
@@ -62,7 +46,6 @@
 .projectCardActions a,
 .projectCardActions button {
     text-decoration: none;
-    border: none;
     background-color: #FFF;
     color: #222;
     font-size: .9em;
@@ -80,8 +63,7 @@
     margin-right: .5em;
 }
 
-projectCardActions a:hover,
-projectCardActions button:hover {
+.projectCardActions button:hover, .projectCardActions a:hover {
     background-color: #222;
     color: #FFBB33;
 }

@@ -13,7 +13,7 @@ function Function({type, msg}) {
 
         const timer = setTimeout(() => {
             setVisible(false)
-        }, 3000)
+        }, 10000)
 
         return () => clearTimeout(timer)
 

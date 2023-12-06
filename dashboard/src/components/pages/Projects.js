@@ -38,12 +38,11 @@ function Projects() {
 
     function removeProject(id) {
         fetch(`http://localhost:3333/project/${id}`, {
-            method: 'Delete',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
         })
-            .then((resp) => resp.json())
             .then(() => {
                 setProjects(projects.filter((project) => project.id !== id))
                 setProjectMessage('Projeto removido com sucesso!')

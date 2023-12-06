@@ -4,7 +4,7 @@ const {getTask} = require("./tasksModel");
 
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ACTIVITIES_ID;
 
-async function adapterResponse(projects, idObjectives, idTasks) {
+async function adapterResponse(project, idObjectives, idTasks) {
 
     const objectives = await Promise.all(idObjectives.map((id) => {
         return getObjective(id);
@@ -14,17 +14,17 @@ async function adapterResponse(projects, idObjectives, idTasks) {
         return getTask(id);
     }));
 
-    return projects.map((data) => ({
-        id: data.id,
-        name: data.properties.Name.title[0].plain_text,
-        budget: data.properties.Budget.number,
+    return ({
+        id: project.id,
+        name: project.properties.Name.title[0].plain_text,
+        budget: project.properties.Budget.number,
         category: objectives.map((objective) => ({
             "id": objective.id,
             "name": objective.properties.Name.title[0].plain_text
         })),
-        costs: data.properties.Costs.rollup.number,
+        costs: project.properties.Costs.rollup.number,
         tasks: tasks
-    }))
+    })
 }
 
 const getProjects = async () => {
@@ -38,7 +38,7 @@ const getProjects = async () => {
         const idObjectives = project.properties.Objectives.relation.map(id => id.id);
         const idTasks = project.properties.Tasks.relation.map(id => id.id);
 
-        return await adapterResponse(projects.results, idObjectives, idTasks);
+        return await adapterResponse(project, idObjectives, idTasks);
         })
     );
 
@@ -71,7 +71,7 @@ const getProjectsMonthly = async () => {
             const idObjectives = project.properties.Objectives.relation.map(id => id.id);
             const idTasks = project.properties.Tasks.relation.map(id => id.id);
 
-            return await adapterResponse(projectsMonthly.results, idObjectives, idTasks);
+            return await adapterResponse(project, idObjectives, idTasks);
         })
     );
 
@@ -86,7 +86,7 @@ const getProject = async (id) => {
     const idObjectives = project.properties.Objectives.relation.map(id => id.id);
     const idTasks = project.properties.Tasks.relation.map(id => id.id);
 
-    const typedResponse = await adapterResponse([project], idObjectives, idTasks);
+    const typedResponse = await adapterResponse(project, idObjectives, idTasks);
 
     console.log(typedResponse);
     return typedResponse;

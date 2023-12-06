@@ -20,7 +20,7 @@ function Projects() {
 
     useEffect(() => {
         setTimeout(() => {
-        fetch('http://localhost:5000/projects', {
+        fetch('http://localhost:3333/projects/monthly', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,8 +28,8 @@ function Projects() {
         })
             .then((resp) => resp.json())
             .then((data) => {
-                console.log(data)
-                setProjects(data)
+                console.log(data[0])
+                setProjects(data[0])
                 setRemoveLoading(true)
             })
             .catch((err) => console.log(err))
@@ -37,7 +37,7 @@ function Projects() {
     }, [])
 
     function removeProject(id) {
-        fetch(`http://localhost:5000/projects/${id}`, {
+        fetch(`http://localhost:3333/project/${id}`, {
             method: 'Delete',
             headers: {
                 'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ function Projects() {
                             id={project.id}
                             name={project.name}
                             budget={project.budget}
-                            category={project.category.name}
+                            category={project.category[0]}
                             key={project.id}
                             handleRemove={removeProject}
                         />)

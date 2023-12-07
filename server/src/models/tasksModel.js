@@ -2,13 +2,13 @@ const notion = require("../services/connection")
 
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_TASKS_ID
 
-async function adapterResponse(tasks) {
-    return tasks.map((data) => ({
-        id: data.id,
-        name: data.properties.Name.title[0].plain_text,
-        costs: data.properties.Costs.number,
-        activities: data.properties.Activities.relation.map(id => id.id)
-    }));
+async function adapterResponse(task) {
+    return {
+        id: task.id,
+        name: task.properties.Name.title[0].plain_text,
+        costs: task.properties.Costs.number,
+        activities: task.properties.Activities.relation.map(id => id.id)
+    };
 }
 
 const getTasks = async () => {
@@ -17,11 +17,11 @@ const getTasks = async () => {
     });
 
     const typedResponse = await Promise.all(
-        tasks.results.map(async project => {
+        tasks.results.map(async task => {
 
-            const idActivities = project.properties.Activities.relation.map(id => id.id);
+            const idActivities = task.properties.Activities.relation.map(id => id.id);
 
-            return await adapterResponse(tasks.results, idActivities);
+            return await adapterResponse(task, idActivities);
         })
     );
 
@@ -42,11 +42,11 @@ const getTasksWeekly = async () => {
     });
 
     const typedResponse = await Promise.all(
-        tasksWeekly.results.map(async project => {
+        tasksWeekly.results.map(async task => {
 
-            const idActivities = project.properties.Activities.relation.map(id => id.id);
+            const idActivities = task.properties.Activities.relation.map(id => id.id);
 
-            return await adapterResponse(tasksWeekly.results, idActivities);
+            return await adapterResponse(task, idActivities);
         })
     );
 
@@ -61,15 +61,15 @@ const getTask = async (id) => {
 
     const idActivities = task.properties.Activities.relation.map(id => id.id);
 
-    const typedResponse = await adapterResponse([task], idActivities);
+    const typedResponse = await adapterResponse(task, idActivities);
     console.log(typedResponse);
     return typedResponse;
 };
 
 const createTask = async (task) => {
-    const {title} = task;
+    const {name, costs, description, idActivities} = task;
 
-    const createdTask = await notion.pages.create({
+    let createdTask = await notion.pages.create({
         parent: {
             database_id: NOTION_DATABASE_ID,
         },
@@ -78,15 +78,47 @@ const createTask = async (task) => {
                 "title": [
                     {
                         "text": {
-                            "content": title
+                            "content": name
+                        }
+                    }
+                ]
+            },
+            "Costs": {
+                "number": costs
+            },
+            "Notes": {
+                "rich_text": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "content": description
                         }
                     }
                 ]
             }
         }
     });
-    console.log(createdTask);
-    return({id: createdTask.id, url: createdTask.url})
+
+    console.log("qwerqwerqwre", idActivities, "aqwerqwerqwerqwer")
+
+    if(idActivities) {
+        createdTask = await notion.pages.update({
+            "page_id": createdTask.id,
+            "properties": {
+                "Activities": {
+                    "relation": [
+                        {
+                            "id": idActivities
+                        }
+                    ]
+                }
+            }
+        });
+    }
+
+    const typedResponse = adapterResponse(createdTask);
+    console.log(typedResponse);
+    return(typedResponse)
 }
 
 const deleteTask = async (id) => {
@@ -98,7 +130,7 @@ const deleteTask = async (id) => {
 };
 
 const updateTask = async (id, task) => {
-    const {title} = task;
+    const {name} = task;
 
     const updatedTask = await notion.pages.update({
         "page_id": id,
@@ -107,7 +139,7 @@ const updateTask = async (id, task) => {
                 "title": [
                     {
                         "text": {
-                            "content": title
+                            "content": name
                         }
                     }
                 ]

@@ -2,18 +2,40 @@ import {useState} from "react";
 import styles from '../project/ProjectForm.module.css'
 import Input from "../form/Input";
 import SubmitButton from "../form/SubmitButton";
-function ServiceForm({handleSubmit, btnText, projectData}) {
+function TaskForm({handleSubmit, btnText, projectData}) {
 
-    const [service, setService] = useState([])
+    const [task, setTask] = useState({'idActivities': projectData.id})
+
+    function createPost(task) {
+        fetch("http://localhost:3333/task", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                console.log(data)
+            })
+            .catch((err) => console.log(err))
+    }
 
     function submit(e) {
         e.preventDefault()
-        projectData.services.push(service)
+        console.log("criando:", task)
+        createPost(task)
+        projectData.tasks.push(task)
         handleSubmit(projectData)
     }
 
     function handleChange(e) {
-        setService({...service, [e.target.name]: e.target.value})
+        setTask({ ...task, [e.target.name]: e.target.value})
+        // console.log(task)
+    }
+    function handleChangeCost(e) {
+        setTask({ ...task, [e.target.name]: Number(e.target.value)})
+        // console.log(project)
     }
 
     return(
@@ -28,9 +50,9 @@ function ServiceForm({handleSubmit, btnText, projectData}) {
             <Input
                 type="number"
                 text="Custo da tarefa"
-                name="cost"
+                name="costs"
                 placeholder="Insira o valor total"
-                handleOnChange={handleChange}
+                handleOnChange={handleChangeCost}
             />
             <Input
                 type="text"
@@ -43,4 +65,4 @@ function ServiceForm({handleSubmit, btnText, projectData}) {
         </form>
     )
 }
-export default ServiceForm
+export default TaskForm

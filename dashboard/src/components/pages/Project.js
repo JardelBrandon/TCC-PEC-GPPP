@@ -55,6 +55,7 @@ function Project() {
         })
             .then((resp) => resp.json())
             .then((data) => {
+                console.log(data)
                 setProject(data)
                 setShowProjectForm(false)
                 setMessage('Projeto atualizado!')
@@ -101,7 +102,7 @@ function Project() {
             .finally(setMessage())
     }
 
-    function removeTask(id, cost) {
+    function removeTask(id, costs) {
         const tasksUpdate = project.tasks.filter(
             (task) => task.id !== id
         )
@@ -109,7 +110,7 @@ function Project() {
         const projectUpdated = project
 
         projectUpdated.tasks = tasksUpdate
-        projectUpdated.cost = parseFloat(projectUpdated.cost) - parseFloat(cost)
+        projectUpdated.costs = parseFloat(projectUpdated.costs) - parseFloat(costs)
 
         fetch(`http://localhost:3333/project/${projectUpdated.id}`, {
             method: 'PATCH',
@@ -157,7 +158,7 @@ function Project() {
                                         <span>Total de orçamento:</span> R${project.budget}
                                     </p>
                                     <p>
-                                        <span>Total utilizado:</span> R${project.cost}
+                                        <span>Total utilizado:</span> R${project.costs}
                                     </p>
                                 </div>
                             ) : (
@@ -191,9 +192,9 @@ function Project() {
                                         <TaskCard
                                             id={task.id}
                                             name={task.name}
-                                            cost={task.cost}
+                                            costs={task.costs}
                                             description={task.description}
-                                            key={task.id}
+                                            idActivities={task.idActivities}
                                             handleRemove={removeTask}
                                         />
 

@@ -37,8 +37,8 @@ const deleteProject = async (req, res) => {
 const updateProject = async (req, res) => {
     const {id} = req.params;
 
-    await projectsModel.updateProject(id, req.body);
-    return res.status(204).json();
+    const project = await projectsModel.updateProject(id, req.body);
+    return res.status(201).json(project);
 }
 
 module.exports = {

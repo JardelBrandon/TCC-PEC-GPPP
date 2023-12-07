@@ -6,8 +6,8 @@ import Loading from "../layout/Loading";
 import Container from "../layout/Container";
 import ProjectForm from "../project/ProjectForm";
 import Message from "../layout/Message";
-import ServiceForm from "../service/ServiceForm";
-import ServiceCard from '../service/ServiceCard'
+import TaskForm from "../task/TaskForm";
+import TaskCard from '../task/TaskCard'
 
 
 function Project() {
@@ -15,14 +15,14 @@ function Project() {
     const {id} = useParams()
     const [project, setProject] = useState([])
     const [showProjectForm, setShowProjectForm] = useState(false)
-    const [showServiceForm, setShowServiceForm] = useState(false)
+    const [showTaskForm, setShowTaskForm] = useState(false)
     const [message, setMessage] = useState()
     const [type, setType] = useState()
-    const [services, setServices] = useState([])
+    const [tasks, setTasks] = useState([])
 
     useEffect(() => {
         setTimeout(() => {
-            fetch(`http://localhost:3333/projects/${id}`, {
+            fetch(`http://localhost:3333/project/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ function Project() {
                 .then((data) => {
                     console.log(data)
                     setProject(data)
-                    setServices(data.services)
+                    setTasks(data.tasks)
                 })
                 .catch((err) => console.log(err))
         }, 300)
@@ -46,12 +46,12 @@ function Project() {
             return false
         }
 
-        fetch(`http://localhost:3333/projects/${project.id}`, {
+        fetch(`http://localhost:3333/project/${project.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(project),
+            body: JSON.stringify(project)
         })
             .then((resp) => resp.json())
             .then((data) => {
@@ -64,28 +64,28 @@ function Project() {
             .finally(setMessage())
     }
 
-    function createService() {
-        // last service
-        const lastService = project.services[project.services.length - 1]
+    function createTask() {
+        // last task
+        const lastTask = project.tasks[project.tasks.length - 1]
 
-        lastService.id = uuidv4()
+        lastTask.id = uuidv4()
 
-        const lastServiceCost = lastService.cost
-        const newCost = parseFloat(project.cost) + parseFloat(lastServiceCost)
+        const lastTaskCost = lastTask.cost
+        const newCost = parseFloat(project.cost) + parseFloat(lastTaskCost)
 
         //maximum value validation
         if(newCost > parseFloat(project.budget)) {
-            setMessage('Orçamento ultrapassado, verifique o valor do serviço')
+            setMessage('Orçamento ultrapassado, verifique o valor da tarefa')
             setType('error')
-            project.services.pop()
+            project.tasks.pop()
             return false
         }
 
-        // add service cost to project total cost
+        // add task cost to project total cost
         project.cost = newCost
 
         // update project
-        fetch(`http://localhost:3333/projects/${project.id}`, {
+        fetch(`http://localhost:3333/project/${project.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -95,23 +95,23 @@ function Project() {
             .then((resp) => resp.json())
             .then((data) => {
                 console.log(data)
-                setShowServiceForm(false)
+                setShowTaskForm(false)
             })
             .catch((err) => console.log(err))
             .finally(setMessage())
     }
 
-    function removeService(id, cost) {
-        const servicesUpdate = project.services.filter(
-            (service) => service.id !== id
+    function removeTask(id, cost) {
+        const tasksUpdate = project.tasks.filter(
+            (task) => task.id !== id
         )
 
         const projectUpdated = project
 
-        projectUpdated.services = servicesUpdate
+        projectUpdated.tasks = tasksUpdate
         projectUpdated.cost = parseFloat(projectUpdated.cost) - parseFloat(cost)
 
-        fetch(`http://localhost:3333/projects/${projectUpdated.id}`, {
+        fetch(`http://localhost:3333/project/${projectUpdated.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -122,8 +122,8 @@ function Project() {
             .then((data) => {
                 console.log(data)
                 setProject(projectUpdated)
-                setServices(servicesUpdate)
-                setMessage('Serviço removido com sucesso!')
+                setTasks(tasksUpdate)
+                setMessage('Tarefa removida com sucesso!')
                 setType('success')
             })
             .catch((err) => console.log(err))
@@ -133,8 +133,8 @@ function Project() {
         setShowProjectForm(!showProjectForm)
     }
 
-    function toggleServiceForm() {
-        setShowServiceForm(!showServiceForm)
+    function toggleTaskForm() {
+        setShowTaskForm(!showTaskForm)
     }
 
     return (
@@ -151,7 +151,7 @@ function Project() {
                             {!showProjectForm ? (
                                 <div className={styles.projectInfo}>
                                     <p>
-                                        <span>Categoria:</span> {project.category.name}
+                                        <span>Categoria:</span> {project.category[0].name}
                                     </p>
                                     <p>
                                         <span>Total de orçamento:</span> R${project.budget}
@@ -170,36 +170,36 @@ function Project() {
                                 </div>
                             )}
                         </div>
-                        <div className={styles.serviceFormContainer}>
-                            <h2>Adicione um serviço:</h2>
-                            <button className={styles.btn} onClick={toggleServiceForm}>
-                                {!showServiceForm ? 'Adicionar serviço' : 'Fechar'}
+                        <div className={styles.taskFormContainer}>
+                            <h2>Adicione uma tarefa:</h2>
+                            <button className={styles.btn} onClick={toggleTaskForm}>
+                                {!showTaskForm ? 'Adicionar tarefa' : 'Fechar'}
                             </button>
                             <div className={styles.projectInfo}>
-                                {showServiceForm && (
-                                      <ServiceForm
-                                        handleSubmit={createService}
-                                        btnText="Adicionar serviço"
+                                {showTaskForm && (
+                                      <TaskForm
+                                        handleSubmit={createTask}
+                                        btnText="Adicionar tarefa"
                                         projectData={project}
                                       />
                                 )}
                             </div>
-                            <h2>Serviço</h2>
+                            <h2>Tarefa</h2>
                             <Container customClass="start">
-                                {services.length > 0 &&
-                                    services.map((service) => (
-                                        <ServiceCard
-                                            id={service.id}
-                                            name={service.name}
-                                            cost={service.cost}
-                                            description={service.description}
-                                            key={service.id}
-                                            handleRemove={removeService}
+                                {tasks.length > 0 &&
+                                    tasks.map((task) => (
+                                        <TaskCard
+                                            id={task.id}
+                                            name={task.name}
+                                            cost={task.cost}
+                                            description={task.description}
+                                            key={task.id}
+                                            handleRemove={removeTask}
                                         />
 
                                     ))
 
-                                }{services.length === 0 && <p>Não há serviços cadastrados.</p>}
+                                }{tasks.length === 0 && <p>Não há tarefas cadastrados.</p>}
                             </Container>
                         </div>
                     </Container>

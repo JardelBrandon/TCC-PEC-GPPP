@@ -132,7 +132,7 @@ const deleteProject = async (id) => {
 };
 
 const updateProject = async (id, project) => {
-    const {title} = project;
+    const {name, budget, category} = project;
 
     const updatedProject = await notion.pages.update({
         "page_id": id,
@@ -141,15 +141,28 @@ const updateProject = async (id, project) => {
                 "title": [
                     {
                         "text": {
-                            "content": title
+                            "content": name
                         }
                     }
                 ]
+            },
+            "Budget": {
+                "number": budget
+            },
+            "Objectives": {
+                "relation": [{
+                    "id": category.id
+                }]
             }
         }
     });
-    console.log(updatedProject);
-    return updatedProject;
+
+    const idObjectives = updatedProject.properties.Objectives.relation.map(id => id.id);
+    const idTasks = updatedProject.properties.Tasks.relation.map(id => id.id);
+
+    const typedResponse = await adapterResponse(updatedProject, idObjectives, idTasks);
+    console.log(typedResponse);
+    return typedResponse;
 };
 
 module.exports = {

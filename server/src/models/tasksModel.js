@@ -99,8 +99,6 @@ const createTask = async (task) => {
         }
     });
 
-    console.log("qwerqwerqwre", idActivities, "aqwerqwerqwerqwer")
-
     if(idActivities) {
         createdTask = await notion.pages.update({
             "page_id": createdTask.id,

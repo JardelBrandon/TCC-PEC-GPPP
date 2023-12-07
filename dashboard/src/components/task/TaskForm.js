@@ -2,11 +2,24 @@ import {useState} from "react";
 import styles from '../project/ProjectForm.module.css'
 import Input from "../form/Input";
 import SubmitButton from "../form/SubmitButton";
+import Message from "../layout/Message";
 function TaskForm({handleSubmit, btnText, projectData}) {
 
-    const [task, setTask] = useState({'idActivities': projectData.id})
+    const [task, setTask] = useState({'idActivities': projectData.id, "costs": 0})
+    const [message, setMessage] = useState()
+    const [type, setType] = useState()
 
     function createPost(task) {
+        const newCost = parseFloat(projectData.costs) + parseFloat(task.costs)
+
+        //maximum value validation
+        if(newCost > parseFloat(projectData.budget)) {
+            setMessage('Orçamento ultrapassado, verifique o valor da tarefa')
+            setType('error')
+            return false
+        }
+        projectData.costs = newCost
+
         fetch("http://localhost:3333/task", {
             method: 'POST',
             headers: {
@@ -17,16 +30,17 @@ function TaskForm({handleSubmit, btnText, projectData}) {
             .then((resp) => resp.json())
             .then((data) => {
                 console.log(data)
+                projectData.tasks.push(data)
+                handleSubmit(projectData)
+                setMessage('Tarefa criado com sucesso!')
+                setType('success')
             })
             .catch((err) => console.log(err))
     }
 
     function submit(e) {
         e.preventDefault()
-        console.log("criando:", task)
         createPost(task)
-        projectData.tasks.push(task)
-        handleSubmit(projectData)
     }
 
     function handleChange(e) {
@@ -52,6 +66,7 @@ function TaskForm({handleSubmit, btnText, projectData}) {
                 text="Custo da tarefa"
                 name="costs"
                 placeholder="Insira o valor total"
+                defaultValue={0}
                 handleOnChange={handleChangeCost}
             />
             <Input
@@ -62,6 +77,7 @@ function TaskForm({handleSubmit, btnText, projectData}) {
                 handleOnChange={handleChange}
             />
             <SubmitButton text={btnText} />
+            {message && <Message type={type} msg={message}/>}
         </form>
     )
 }

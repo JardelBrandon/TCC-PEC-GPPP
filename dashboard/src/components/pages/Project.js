@@ -1,4 +1,3 @@
-import {v4 as uuidv4} from 'uuid'
 import styles from './Project.module.css'
 import {useParams} from "react-router-dom";
 import {useState, useEffect} from "react";
@@ -66,25 +65,6 @@ function Project() {
     }
 
     function createTask() {
-        // last task
-        const lastTask = project.tasks[project.tasks.length - 1]
-
-        lastTask.id = uuidv4()
-
-        const lastTaskCost = lastTask.cost
-        const newCost = parseFloat(project.cost) + parseFloat(lastTaskCost)
-
-        //maximum value validation
-        if(newCost > parseFloat(project.budget)) {
-            setMessage('Orçamento ultrapassado, verifique o valor da tarefa')
-            setType('error')
-            project.tasks.pop()
-            return false
-        }
-
-        // add task cost to project total cost
-        project.cost = newCost
-
         // update project
         fetch(`http://localhost:3333/project/${project.id}`, {
             method: 'PATCH',
@@ -103,27 +83,25 @@ function Project() {
     }
 
     function removeTask(id, costs) {
-        const tasksUpdate = project.tasks.filter(
-            (task) => task.id !== id
-        )
-
-        const projectUpdated = project
-
-        projectUpdated.tasks = tasksUpdate
-        projectUpdated.costs = parseFloat(projectUpdated.costs) - parseFloat(costs)
-
-        fetch(`http://localhost:3333/project/${projectUpdated.id}`, {
-            method: 'PATCH',
+        fetch(`http://localhost:3333/task/${id}`, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(projectUpdated)
+            }
         })
-            .then((resp) => resp.json())
+            // .then((resp) => resp.json())
             .then((data) => {
+                const taskUpdate = project.tasks.filter(
+                    (task) => task.id !== id
+                )
+                const projectUpdate = project
+
+                projectUpdate.tasks = taskUpdate
+                projectUpdate.costs = parseFloat(projectUpdate.costs) - parseFloat(costs)
+
                 console.log(data)
-                setProject(projectUpdated)
-                setTasks(tasksUpdate)
+                setProject(projectUpdate)
+                setTasks(taskUpdate)
                 setMessage('Tarefa removida com sucesso!')
                 setType('success')
             })

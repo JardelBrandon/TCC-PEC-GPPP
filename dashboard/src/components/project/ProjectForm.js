@@ -6,7 +6,7 @@ import SubmitButton from "../form/SubmitButton";
 function ProjectForm({handleSubmit, btnText, projectData}) {
 
     const [categories, setCategories] = useState([])
-    const [project, setProject] = useState(projectData || {})
+    const [project, setProject] = useState(projectData || {"budget": 0})
 
     useEffect(() => {
         fetch("http://localhost:3333/objectives", {
@@ -64,7 +64,7 @@ function ProjectForm({handleSubmit, btnText, projectData}) {
                 name="budget"
                 placeholder="Insira o orçamento total"
                 handleOnChange={handleChangeBudget}
-                value={project.budget ? project.budget : ''}
+                defaultValue={0}
             />
             <Select
                 name="categoryId"

@@ -1,5 +1,13 @@
 const tasksModel = require('../models/tasksModel')
 
+const getTask = async (req, res) => {
+    const {id} = req.params;
+
+    const task = await tasksModel.getTask(id);
+
+    return res.status(200).json(task);
+};
+
 const getTasks = async (req, res) => {
 
     const tasks = await tasksModel.getTasks();
@@ -14,12 +22,11 @@ const getTasksWeekly = async (req, res) => {
     return res.status(200).json(tasksWeekly);
 };
 
-const getTask = async (req, res) => {
-    const {id} = req.params;
+const getTasksDashboard = async (req, res) => {
 
-    const task = await tasksModel.getTask(id);
+    const tasksWeekly = await tasksModel.getTasksDashboard();
 
-    return res.status(200).json(task);
+    return res.status(200).json(tasksWeekly);
 };
 
 const createTask = async (req, res) => {
@@ -42,9 +49,10 @@ const updateTask = async (req, res) => {
 }
 
 module.exports = {
-    getTasksWeekly,
-    getTasks,
     getTask,
+    getTasks,
+    getTasksWeekly,
+    getTasksDashboard,
     createTask,
     deleteTask,
     updateTask

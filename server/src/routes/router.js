@@ -21,17 +21,18 @@ router.post('/objective', objectivesMiddleware.validateBody, objectivesControlle
 router.delete('/objective/:id', objectivesController.deleteObjective);
 router.patch('/objective/:id', objectivesMiddleware.validateBody, objectivesController.updateObjective);
 
-router.get('/projects', projectsController.getProjects);
 router.get('/project/:id', projectsController.getProject);
+router.get('/projects', projectsController.getProjects);
 router.get('/projects/monthly', projectsController.getProjectsMonthly);
 router.get('/projects/dashboard', projectsController.getProjectsDashboard);
 router.post('/project', projectsMiddleware.validateBody, projectsController.createProject);
 router.delete('/project/:id', projectsController.deleteProject);
 router.patch('/project/:id', projectsMiddleware.validateBody, projectsController.updateProject);
 
-router.get('/tasks', tasksController.getTasks);
 router.get('/task/:id', tasksController.getTask);
+router.get('/tasks', tasksController.getTasks);
 router.get('/tasks/weekly', tasksController.getTasksWeekly);
+router.get('/tasks/dashboard', tasksController.getTasksDashboard);
 router.post('/task', tasksMiddleware.validateBody, tasksController.createTask);
 router.delete('/task/:id', tasksController.deleteTask);
 router.patch('/task/:id', tasksMiddleware.validateBody, tasksController.updateTask);

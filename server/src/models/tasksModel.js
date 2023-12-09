@@ -11,6 +11,18 @@ async function adapterResponse(task) {
     };
 }
 
+const getTask = async (id) => {
+    const task = await notion.pages.retrieve({
+        page_id: id
+    })
+
+    const idActivities = task.properties.Activities.relation.map(id => id.id);
+
+    const typedResponse = await adapterResponse(task, idActivities);
+    console.log(typedResponse);
+    return typedResponse;
+};
+
 const getTasks = async () => {
     const tasks = await notion.databases.query({
         database_id: NOTION_DATABASE_ID,
@@ -54,15 +66,23 @@ const getTasksWeekly = async () => {
     return typedResponse;
 };
 
-const getTask = async (id) => {
-    const task = await notion.pages.retrieve({
-        page_id: id
-    })
+const getTasksDashboard = async () => {
 
-    const idActivities = task.properties.Activities.relation.map(id => id.id);
+    const tasks = await notion.databases.query({
+        database_id: NOTION_DATABASE_ID,
+    });
 
-    const typedResponse = await adapterResponse(task, idActivities);
-    console.log(typedResponse);
+    const typedResponse = await Promise.all(
+        tasks.results.map(async task => {
+            return {
+                name: task.properties.Name.title[0].plain_text,
+                costs: task.properties.Costs.number,
+                status: task.properties.Status.status.name
+            };
+        })
+    );
+
+    console.dir(typedResponse, {depth: null})
     return typedResponse;
 };
 
@@ -149,9 +169,10 @@ const updateTask = async (id, task) => {
 };
 
 module.exports = {
-    getTasksWeekly,
-    getTasks,
     getTask,
+    getTasks,
+    getTasksWeekly,
+    getTasksDashboard,
     createTask,
     deleteTask,
     updateTask

@@ -24,6 +24,7 @@ router.patch('/objective/:id', objectivesMiddleware.validateBody, objectivesCont
 router.get('/projects', projectsController.getProjects);
 router.get('/project/:id', projectsController.getProject);
 router.get('/projects/monthly', projectsController.getProjectsMonthly);
+router.get('/projects/dashboard', projectsController.getProjectsDashboard);
 router.post('/project', projectsMiddleware.validateBody, projectsController.createProject);
 router.delete('/project/:id', projectsController.deleteProject);
 router.patch('/project/:id', projectsMiddleware.validateBody, projectsController.updateProject);

@@ -27,6 +27,19 @@ async function adapterResponse(project, idObjectives, idTasks) {
     })
 }
 
+const getProject = async (id) => {
+    const project = await notion.pages.retrieve({
+        page_id: id
+    })
+    const idObjectives = project.properties.Objectives.relation.map(id => id.id);
+    const idTasks = project.properties.Tasks.relation.map(id => id.id);
+
+    const typedResponse = await adapterResponse(project, idObjectives, idTasks);
+
+    console.log(typedResponse);
+    return typedResponse;
+};
+
 const getProjects = async () => {
     const projects = await notion.databases.query({
         database_id: NOTION_DATABASE_ID,
@@ -42,7 +55,7 @@ const getProjects = async () => {
         })
     );
 
-    console.dir(await typedResponse, {depth: null});
+    console.dir(await projects, {depth: null});
     return await typedResponse;
 };
 
@@ -79,17 +92,24 @@ const getProjectsMonthly = async () => {
     return typedResponse;
 };
 
-const getProject = async (id) => {
-    const project = await notion.pages.retrieve({
-        page_id: id
-    })
-    const idObjectives = project.properties.Objectives.relation.map(id => id.id);
-    const idTasks = project.properties.Tasks.relation.map(id => id.id);
+const getProjectsDashboard = async () => {
+    const projectsDashboard = await notion.databases.query({
+        database_id: NOTION_DATABASE_ID,
+    });
 
-    const typedResponse = await adapterResponse(project, idObjectives, idTasks);
+    const typedResponse = await Promise.all(
+        projectsDashboard.results.map(async project => {
+            return ({
+                name: project.properties.Name.title[0].plain_text,
+                budget: project.properties.Budget.number,
+                costs: project.properties.Costs.rollup.number,
+                status: project.properties.Status.formula.string
+            })
+        })
+    );
 
-    console.log(typedResponse);
-    return typedResponse;
+    console.dir(await typedResponse, {depth: null});
+    return await typedResponse;
 };
 
 const createProject = async (project) => {
@@ -178,9 +198,10 @@ const updateProject = async (id, project) => {
 };
 
 module.exports = {
-    getProjectsMonthly,
-    getProjects,
     getProject,
+    getProjects,
+    getProjectsMonthly,
+    getProjectsDashboard,
     createProject,
     deleteProject,
     updateProject

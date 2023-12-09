@@ -1,5 +1,13 @@
 const projectsModel = require('../models/projectsModel')
 
+const getProject = async (req, res) => {
+    const {id} = req.params;
+
+    const project = await projectsModel.getProject(id);
+
+    return res.status(200).json(project);
+};
+
 const getProjects = async (req, res) => {
 
     const projects = await projectsModel.getProjects();
@@ -14,12 +22,11 @@ const getProjectsMonthly = async (req, res) => {
     return res.status(200).json(projectsMonthly);
 };
 
-const getProject = async (req, res) => {
-    const {id} = req.params;
+const getProjectsDashboard = async (req, res) => {
 
-    const project = await projectsModel.getProject(id);
+    const projectsDashboard = await projectsModel.getProjectsDashboard();
 
-    return res.status(200).json(project);
+    return res.status(200).json(projectsDashboard);
 };
 
 const createProject = async (req, res) => {
@@ -42,9 +49,10 @@ const updateProject = async (req, res) => {
 }
 
 module.exports = {
-    getProjectsMonthly,
-    getProjects,
     getProject,
+    getProjects,
+    getProjectsMonthly,
+    getProjectsDashboard,
     createProject,
     deleteProject,
     updateProject

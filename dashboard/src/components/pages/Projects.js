@@ -62,20 +62,20 @@ function Projects() {
             <Container customClass="start">
                 {Boolean(projects.length) &&
                     projects.map((project) =>
-                        (<ProjectCard
+                        <ProjectCard
                             id={project.id}
                             name={project.name}
                             budget={project.budget}
                             category={project.category.length ? project.category[0].name : ""}
                             key={project.id}
-                            handleRemove={removeProject}
-                        />)
+                            hadleRemove={removeProject}
+                        />
                     )
                 }
                 {!removeLoading && <Loading />}
-                {removeLoading && projects.length === 0 && (
+                {removeLoading && Boolean(projects.length) &&
                     <p>Não há projetos cadastrados!</p>
-                )}
+                }
             </Container>
         </div>
     )

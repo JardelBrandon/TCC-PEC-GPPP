@@ -127,7 +127,7 @@ export default function Dashboard() {
                     <div className={styles.chartsContainer}>
                         <h2>Dashboard Projetos:</h2>
                         <button className={styles.btn} onClick={toggleProjectsCharts}>
-                            {!showProjectsCharts ? 'gráficos projetos': 'Fechar'}
+                            {!showProjectsCharts ? 'Gráficos Projetos': 'Fechar'}
                         </button>
                     </div>
                     <Container>
@@ -163,7 +163,7 @@ export default function Dashboard() {
                 <div className={styles.chartsContainer}>
                     <h2>Dashboard Tarefas:</h2>
                     <button className={styles.btn} onClick={toggleTasksCharts}>
-                        {!showTasksCharts ? 'gráficos tarefas': 'Fechar'}
+                        {!showTasksCharts ? 'Gráficos Tarefas': 'Fechar'}
                     </button>
                 </div>
                 <Container>

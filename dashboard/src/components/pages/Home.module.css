@@ -29,6 +29,7 @@
 }
 
 .item {
-    margin-right: 10px;
-    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 25%;
 }

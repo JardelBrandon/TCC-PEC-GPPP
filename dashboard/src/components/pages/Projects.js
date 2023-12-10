@@ -60,7 +60,7 @@ function Projects() {
             {message && <Message type="sucess" msg={message} />}
             {projectMessage && <Message type="sucess" msg={projectMessage} />}
             <Container customClass="start">
-                {projects.length &&
+                {Boolean(projects.length) &&
                     projects.map((project) =>
                         (<ProjectCard
                             id={project.id}

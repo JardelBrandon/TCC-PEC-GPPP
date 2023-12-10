@@ -118,7 +118,7 @@ function Project() {
 
     return (
         <>
-            {project.name ? (
+            {Boolean(project.length) ? (
                 <div className={styles.projectDetails}>
                     <Container customClass={'column'}>
                         {message && <Message type={type} msg={message}/>}
@@ -149,7 +149,7 @@ function Project() {
                                 </div>
                             )}
                         </div>
-                        <div className={styles.taskFormContainer}>
+                        <div className={styles.serviceFormContainer}>
                             <h2>Adicione uma tarefa:</h2>
                             <button className={styles.btn} onClick={toggleTaskForm}>
                                 {!showTaskForm ? 'Adicionar tarefa' : 'Fechar'}

@@ -1,6 +1,7 @@
 import styles from "./Contact.module.css"
 import Container from "../layout/Container";
 import LinkMailTo from "../form/LinkMailTo";
+import Coffee from "../form/Coffee";
 
 function Contact() {
     return(
@@ -84,6 +85,9 @@ function Contact() {
                     </div>
                 </div>
             </main>
+            <div className={styles.buyMeACoffee}>
+                <Coffee />
+            </div>
             <footer className={styles.footer}>
                 <p>
                     Feito por: Jardel Brandon de Araujo Regis

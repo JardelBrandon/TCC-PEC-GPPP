@@ -293,6 +293,13 @@ h2 {
     font-size: 14px;
 }
 
+.buyMeACoffee {
+    width:100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
 /*Footer*/
 
 .footer {

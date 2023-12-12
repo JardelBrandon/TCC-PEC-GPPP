@@ -118,7 +118,7 @@ function Project() {
 
     return (
         <>
-            {Boolean(tasks.length) ? (
+            {project.name ? (
                 <div className={styles.projectDetails}>
                     <Container customClass={'column'}>
                         {message && <Message type={type} msg={message}/>}
@@ -165,7 +165,7 @@ function Project() {
                             </div>
                             <h2>Tarefa</h2>
                             <Container customClass="start">
-                                {Boolean(tasks.length) &&
+                                {tasks.length > 0 &&
                                     tasks.map((task) => (
                                         <TaskCard
                                             id={task.id}

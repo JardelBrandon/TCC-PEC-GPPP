@@ -60,22 +60,22 @@ function Projects() {
             {message && <Message type="sucess" msg={message} />}
             {projectMessage && <Message type="sucess" msg={projectMessage} />}
             <Container customClass="start">
-                {Boolean(projects.length) &&
+                {projects.length &&
                     projects.map((project) =>
-                        <ProjectCard
+                        (<ProjectCard
                             id={project.id}
                             name={project.name}
                             budget={project.budget}
                             category={project.category.length ? project.category[0].name : ""}
                             key={project.id}
-                            hadleRemove={removeProject}
-                        />
+                            handleRemove={removeProject}
+                        />)
                     )
                 }
                 {!removeLoading && <Loading />}
-                {removeLoading && Boolean(!projects.length) &&
+                {removeLoading && projects.length === 0 && (
                     <p>Não há projetos cadastrados!</p>
-                }
+                )}
             </Container>
         </div>
     )

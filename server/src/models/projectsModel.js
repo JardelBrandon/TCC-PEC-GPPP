@@ -115,7 +115,7 @@ const getProjectsDashboard = async () => {
 const createProject = async (project) => {
     const {name, budget, category} = project;
 
-    let createdProject = await notion.pages.create({
+    const createdProject = await notion.pages.create({
         parent: {
             database_id: NOTION_DATABASE_ID,
         },
@@ -132,22 +132,13 @@ const createProject = async (project) => {
             "Budget": {
                 "number": budget
             },
+            "Objectives": {
+                "relation": [{
+                    "id": category.id
+                }]
+            }
         }
     });
-
-    if(category) {
-        createdProject = await notion.pages.update({
-            "page_id": createdProject.id,
-            "properties": {
-                "Objectives": {
-                    "relation": [{
-                        "id": category.id
-                    }]
-                }
-            }
-        });
-    }
-
     console.log(createdProject);
     return({id: createdProject.id, url: createdProject.url})
 }

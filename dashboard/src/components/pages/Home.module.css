@@ -28,7 +28,7 @@
     margin: 2em 0;
 }
 
-.buttonContainer {
+.buttonsContainer {
     display: flex;
     justify-content: space-between;
     width: 35%;

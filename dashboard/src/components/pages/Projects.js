@@ -73,7 +73,7 @@ function Projects() {
                     )
                 }
                 {!removeLoading && <Loading />}
-                {removeLoading && Boolean(projects.length) &&
+                {removeLoading && Boolean(!projects.length) &&
                     <p>Não há projetos cadastrados!</p>
                 }
             </Container>

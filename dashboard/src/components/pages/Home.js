@@ -7,7 +7,7 @@ function Home() {
         <section className={styles.homeContainer}>
             <h1>Bem-vindo ao <span>GPP+</span></h1>
             <p>Comece a gerenciar os seus projetos agora mesmo!</p>
-            <div className={styles.item}>
+            <div className={styles.buttonContainer}>
                 <LinkButton to="/newProject" text="Criar Projeto"/>
                 <LinkButton to="/dashboard" text="Dashboard"/>
             </div>

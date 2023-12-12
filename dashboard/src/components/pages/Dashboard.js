@@ -8,7 +8,7 @@ export const optionsProjectsPie = {
     legend: { position: "top" },
     title: "Estados dos projetos",
     subtitle: "Status",
-    colors: ["red", "gold", "green"],
+    colors: ["gold", "green", "red"],
     is3D: true,
 };
 

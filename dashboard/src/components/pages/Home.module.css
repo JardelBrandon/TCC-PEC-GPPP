@@ -28,8 +28,8 @@
     margin: 2em 0;
 }
 
-.item {
+.buttonContainer {
     display: flex;
     justify-content: space-between;
-    width: 25%;
+    width: 35%;
 }
